@@ -15,7 +15,7 @@
         - name: Authenticate with Google Cloud
           uses: google-github-actions/auth@v1
           with:
-            credentials_json: ${{ secrets.GCP_SA_KEY }}
+            credentials_json: ${{ secrets.CDSC1_GS_GH_SERACC }}
 
         - name: Sync Repository to GCS
           uses: google-github-actions/upload-cloud-storage@v1
