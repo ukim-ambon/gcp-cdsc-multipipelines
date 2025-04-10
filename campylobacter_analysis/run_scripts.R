@@ -1,10 +1,10 @@
 library(bigrquery)
 
 # Authenticate using the service account key
-bq_auth(path = "/app/dashgcp-452719-b205be8747a1.json")
+bq_auth(path = "/app/key.json")
 
 # Set project ID
-project_id <- "dashgcp-452719"
+project_id <- "cdsc-projects"
 
 # Define the SQL query
 query <- "SELECT * FROM `dashgcp-452719.qb_ordsur_1_dset.tab_OpenNames` LIMIT 10"
