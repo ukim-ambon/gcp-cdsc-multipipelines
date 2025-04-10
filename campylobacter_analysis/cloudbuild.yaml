@@ -7,7 +7,11 @@ steps:
   - name: 'gcr.io/cloud-builders/gsutil'
     args: ['cp', 'gs://cdsc_pipelines/campylobacter_analysis/run_scripts.R', './run_scripts.R']
 
-  # Step 4: Download entrypoint.sh (if required)
+  # Step 3: Download key.json from GCS (if required)
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: ['cp', 'gs://cdsc_pipelines/campylobacter_analysis/secrets/cdsc-projects-000b39cf47df.json', './key.json']
+
+  # Step 4: Download entrypoint.sh from GCS (if required)
   - name: 'gcr.io/cloud-builders/gsutil'
     args: ['cp', 'gs://cdsc_pipelines/campylobacter_analysis/entrypoint.sh', './entrypoint.sh']
 
