@@ -10,7 +10,7 @@ RUN R -e "install.packages(c('bigrquery', 'googleCloudStorageR'))"
 
 # Copy the R script into the container
 COPY run_scripts.R /app/run_scripts.R
-COPY secrets/cdsc-projects-000b39cf47df.json /app/key.json
+COPY key.json /app/key.json
 COPY entrypoint.sh /app/entrypoint.sh
 
 # Set working directory
