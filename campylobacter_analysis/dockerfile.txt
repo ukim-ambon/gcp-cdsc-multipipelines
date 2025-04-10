@@ -3,18 +3,20 @@ FROM rocker/r-ver:latest
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    libcurl4-openssl-dev \
-    libssl-dev \
-    libxml2-dev
+    libcurl4-openssl-dev libssl-dev libxml2-dev wget curl gnupg
 
 # Install required R packages
 RUN R -e "install.packages(c('bigrquery', 'googleCloudStorageR'))"
 
 # Copy the R script into the container
 COPY run_scripts.R /app/run_scripts.R
+COPY secrets/cdsc-projects-000b39cf47df.json /app/key.json
+COPY entrypoint.sh /app/entrypoint.sh
 
 # Set working directory
 WORKDIR /app
 
-# Set default command to run the script
-CMD ["Rscript", "run_scripts.R"]
+# Permissions
+RUN chmod +x /app/entrypoint.sh
+
+ENTRYPOINT ["/app/entrypoint.sh"]
