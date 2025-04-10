@@ -1,4 +1,5 @@
 library(bigrquery)
+library(googleCloudStorageR)
 
 # Authenticate BigQuery
 bq_auth(path = "/app/key.json")
