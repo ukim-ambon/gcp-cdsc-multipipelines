@@ -3,7 +3,7 @@ library(bigrquery)
 # Authenticate BigQuery
 bq_auth(path = "/app/key.json")
 # Authenticate GCS
-cs_auth(json_file = "/app/key.json")
+gcs_auth(json_file = "/app/key.json")
 
 # Set variables
 project_id <- "cdsc-projects"
