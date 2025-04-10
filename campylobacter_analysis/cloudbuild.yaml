@@ -1,25 +1,31 @@
 steps:
-  # Step 1: Download Dockerfile from GCS to build context
-  - name: 'gcr.io/cloud-builders/gsutil'
-    args: ['cp', 'gs://cdsc_pipelines/campylobacter_analysis/dockerfile', './Dockerfile']
+  # Step 1: Make a working directory (optional since /workspace is default)
+  - name: 'ubuntu'
+    entrypoint: 'bash'
+    args: ['-c', 'mkdir -p /app/build']
 
-  # Step 2: Download run_scripts.R from GCS to build context
+  # Step 2: Copy Dockerfile
   - name: 'gcr.io/cloud-builders/gsutil'
-    args: ['cp', 'gs://cdsc_pipelines/campylobacter_analysis/run_scripts.R', './run_scripts.R']
+    args: ['cp', 'gs://cdsc_pipelines/campylobacter_analysis/dockerfile', '/app/build/Dockerfile']
 
-  # Step 3: Download key.json from GCS (if required)
+  # Step 3: Copy run_scripts.R
   - name: 'gcr.io/cloud-builders/gsutil'
-    args: ['cp', 'gs://cdsc_pipelines/campylobacter_analysis/secrets/cdsc-projects-000b39cf47df.json', './key.json']
+    args: ['cp', 'gs://cdsc_pipelines/campylobacter_analysis/run_scripts.R', '/app/build/run_scripts.R']
 
-  # Step 4: Download entrypoint.sh from GCS (if required)
+  # Step 4: Copy key.json
   - name: 'gcr.io/cloud-builders/gsutil'
-    args: ['cp', 'gs://cdsc_pipelines/campylobacter_analysis/entrypoint.sh', './entrypoint.sh']
+    args: ['cp', 'gs://cdsc_pipelines/campylobacter_analysis/secrets/cdsc-projects-000b39cf47df.json', '/app/build/key.json']
 
-  # Step 5: Build Docker image
+  # Step 5: Copy entrypoint.sh
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: ['cp', 'gs://cdsc_pipelines/campylobacter_analysis/entrypoint.sh', '/app/build/entrypoint.sh']
+
+  # Step 6: Build Docker image using the /workspace/build as the build context
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build', '-t', 'europe-west2-docker.pkg.dev/cdsc-projects/campylobacter-analysis-artreg/campylobacter-analysis-img', '.'
     ]
+    dir: 'build'
 
 images:
   - 'europe-west2-docker.pkg.dev/cdsc-projects/campylobacter-analysis-artreg/campylobacter-analysis-img'
