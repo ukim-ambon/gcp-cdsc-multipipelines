@@ -31,5 +31,10 @@
             parent: false
             exclude: |
               gha-creds-*.json
-              **/gha-creds-*.json
-              **/.gcloud/**
+              .github/**
+              .git/**
+              README.md
+              
+        - name: Cleanup temp GCP credential
+          run: |
+            rm -f gha-creds-*.json
