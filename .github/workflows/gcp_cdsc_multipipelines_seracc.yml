@@ -3,7 +3,7 @@
   on:
     push:
       branches:
-        - main  # Adjust if your default branch is named differently
+        - main
 
   jobs:
     sync:
@@ -15,11 +15,11 @@
         - name: Authenticate with Google Cloud
           uses: google-github-actions/auth@v1
           with:
-            credentials_json: ${{ secrets.CLOSTO_WDB_GITHUB_SERACC }}
+            credentials_json: ${{ secrets.gcp_cdsc_multipipelines_seracc }}
 
         - name: Sync Repository to GCS
           uses: google-github-actions/upload-cloud-storage@v1
           with:
             path: .
-            destination: cdsc_pipelines
+            destination: gcp-cdsc-multipipelines
             parent: false
