@@ -29,11 +29,7 @@
             path: .
             destination: gcp-cdsc-multipipelines
             parent: false
-            exclude: |
-              gha-creds-*.json
-              .github/**
-              .git/**
-              README.md
+            process_gcloudignore: true
               
         - name: Cleanup temp GCP credential
           run: |
