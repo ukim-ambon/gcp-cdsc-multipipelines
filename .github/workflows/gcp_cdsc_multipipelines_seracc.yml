@@ -18,6 +18,11 @@
             credentials_json: ${{ secrets.gcp_cdsc_multipipelines_seracc }}
             cleanup_credentials: true
 
+        - name: Debug - List Files
+          run: |
+            echo "Current directory: $(pwd)"
+            find . -name '*gha-creds*.json'
+
         - name: Sync Repository to GCS
           uses: google-github-actions/upload-cloud-storage@v1
           with:
