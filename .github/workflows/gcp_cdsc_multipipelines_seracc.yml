@@ -24,3 +24,7 @@
             path: .
             destination: gcp-cdsc-multipipelines
             parent: false
+            exclude: |
+              gha-creds-*.json
+              **/gha-creds-*.json
+              **/.gcloud/**
