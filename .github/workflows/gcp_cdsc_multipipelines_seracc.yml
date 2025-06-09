@@ -16,7 +16,7 @@
           uses: google-github-actions/auth@v1
           with:
             credentials_json: ${{ secrets.gcp_cdsc_multipipelines_seracc }}
-            cleanup_credentials: true
+            cleanup_credentials: false
 
         - name: Debug - List Files
           run: |
@@ -30,6 +30,10 @@
         #     destination: gcp-cdsc-multipipelines
         #     parent: false
         #     process_gcloudignore: true
+
+        - name: Activate service account
+          run: |
+            gcloud auth activate-service-account --key-file="${{ steps.auth.outputs.credentials_file_path }}"
 
         - name: Sync (mirror) to GCS
           run: |
