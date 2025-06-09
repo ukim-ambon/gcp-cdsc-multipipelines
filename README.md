@@ -1,2 +1,2 @@
 # gcp-cdsc-multipipelines
-This repo contains all production's pipelines of the CDSC group
+This repo contains all production pipelines of the CDSC group
