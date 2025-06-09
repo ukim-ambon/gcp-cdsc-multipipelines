@@ -1,0 +1,9 @@
+# Ignore Google Cloud credential files (private)
+gha-creds-*.json
+
+# Ignore GitHub workflows and Git metadata
+.github/
+.git/
+
+# Optional: Ignore README or other docs if you want
+# README.md
