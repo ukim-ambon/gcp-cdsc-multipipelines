@@ -39,15 +39,7 @@
         - name: Activate service account manually
           run: |
             gcloud auth activate-service-account --key-file="${{ steps.find-creds.outputs.CREDENTIAL_PATH }}"
-
-        - name: Sync using gsutil (respects .gcloudignore and excludes Git metadata)
-          run: |
-            echo -e "\n.gcloudignore contents:"
-            cat .gcloudignore
-        
-            # Run sync and honor ignore rules
-            gsutil -m rsync -d -r . gs://gcp-cdsc-multipipelines
-              
+             
         - name: Cleanup temp GCP credential
           run: |
             rm -f gha-creds-*.json
