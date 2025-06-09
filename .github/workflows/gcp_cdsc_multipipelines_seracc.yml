@@ -40,10 +40,12 @@
           run: |
             gcloud auth activate-service-account --key-file="${{ steps.find-creds.outputs.CREDENTIAL_PATH }}"
 
-        - name: Sync using gcloud (respects .gcloudignore)
+        - name: Sync using gcloud (respects .gcloudignore and excludes Git metadata)
           run: |
-            gcloud storage rsync --recursive . gs://gcp-cdsc-multipipelines
-
+            gcloud storage rsync --recursive \
+              --exclude '**/.git/**' \
+              --exclude '**/.github/**' \
+              . gs://gcp-cdsc-multipipelines
               
         - name: Cleanup temp GCP credential
           run: |
