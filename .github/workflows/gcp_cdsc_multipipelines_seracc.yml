@@ -31,6 +31,15 @@
         #     parent: false
         #     process_gcloudignore: true
 
+        - name: Find GCP credentials file
+          id: find-creds
+          run: |
+            echo "CREDENTIAL_PATH=$(find . -name 'gha-creds-*.json')" >> $GITHUB_OUTPUT
+
+        - name: Activate service account manually
+          run: |
+            gcloud auth activate-service-account --key-file="${{ steps.find-creds.outputs.CREDENTIAL_PATH }}"
+
         - name: Sync (mirror) to GCS
           run: |
             gsutil -m rsync -d -r . gs://gcp-cdsc-multipipelines
