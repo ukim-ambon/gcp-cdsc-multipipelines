@@ -40,9 +40,10 @@
           run: |
             gcloud auth activate-service-account --key-file="${{ steps.find-creds.outputs.CREDENTIAL_PATH }}"
 
-        - name: Sync (mirror) to GCS
+        - name: Sync using gcloud (respects .gcloudignore)
           run: |
-            gsutil -m rsync -d -r . gs://gcp-cdsc-multipipelines
+            gcloud storage rsync --recursive . gs://gcp-cdsc-multipipelines
+
               
         - name: Cleanup temp GCP credential
           run: |
