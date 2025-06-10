@@ -1,1 +1,0 @@
-print("Hello Campylobacter_analysis pipeline with R")
