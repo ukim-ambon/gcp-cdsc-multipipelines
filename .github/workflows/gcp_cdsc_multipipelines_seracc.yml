@@ -23,6 +23,17 @@
             echo "Current directory: $(pwd)"
             find . -name '*gha-creds*.json'
 
+        - name: Delete old files to compromise rename (except _credential/)
+          run: |
+            # List all objects except _credential/*
+            gsutil ls gs://gcp-cdsc-multipipelines/** | grep -v '^gs://gcp-cdsc-multipipelines/_credential/' > to-delete.txt || true        
+            # Delete them
+            if [[ -s to-delete.txt ]]; then
+              cat to-delete.txt | xargs gsutil rm
+            else
+              echo "No files to delete."
+            fi
+            
         - name: Upload (respects .gcloudignore)
           uses: google-github-actions/upload-cloud-storage@v1
           with:
