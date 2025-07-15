@@ -12,11 +12,11 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                sh 'npm install'
-            }
-        }
+        //stage('Install Dependencies') {
+        //    steps {
+        //        sh 'npm install'
+        //    }
+        //}
 
         stage('Lint') {
             steps {
@@ -43,7 +43,7 @@ def updateGitHubStatus(String state, String description) {
     def commitSha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
     def buildUrl = env.BUILD_URL
 
-    withCredentials([usernamePassword(credentialsId: 'jenkins-ci-token', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN')]) {
+    withCredentials([usernamePassword(credentialsId: 'jenkins-cdsc-token', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN')]) {
         sh """
             curl -s -u "\$GITHUB_USER:\$GITHUB_TOKEN" -X POST -d @- https://api.github.com/repos/${env.GITHUB_REPO}/statuses/${commitSha} <<EOF
             {
