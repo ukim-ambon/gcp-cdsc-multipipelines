@@ -31,6 +31,12 @@ pipeline {
 				'''
 			}
 		}
+		
+		stage('Debug BUILD_URL') {
+			steps {
+				echo "BUILD_URL: '${env.BUILD_URL}'"
+			}
+		}
     }
 
     post {
@@ -49,7 +55,7 @@ pipeline {
 
 def updateGitHubStatus(String state, String description) {
     def commitSha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-    def buildUrl = env.BUILD_URL
+    def buildUrl = env.BUILD_URL ?: 'https://8080-cs-90bc33d3-2207-4028-9b8e-369b8626fcbf.cs-europe-west1-iuzs.cloudshell.dev/job/' + env.JOB_NAME + '/' + env.BUILD_NUMBER + '/'
 
     withCredentials([usernamePassword(credentialsId: 'jenkins-cdsc-token', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN')]) {
         sh """
