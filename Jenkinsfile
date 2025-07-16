@@ -27,7 +27,6 @@ pipeline {
 		stage('R Unit Tests') {
 			steps {
 				sh '''
-					Rscript -e "install.packages('testthat', repos='https://cloud.r-project.org')"
 					Rscript tests/uTest_start.R
 				'''
 			}
