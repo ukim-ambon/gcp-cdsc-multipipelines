@@ -17,16 +17,6 @@ pipeline {
                 sh 'npm install'
             }
         }
-		
-		stage('R Installation') {
-            steps {
-                sh '''
-				  apt-get update &&
-				  apt-get install -y --no-install-recommends r-base &&
-				  Rscript --version
-				'''
-            }
-        }
 
         stage('Lint') {
             steps {
