@@ -27,7 +27,7 @@ pipeline {
 		stage('R Unit Tests') {
 			steps {
 				sh '''
-					Rscript tests/uTest_start.R
+					Rscript campylobacter_analysis/tests/uTest_start.R
 				'''
 			}
 		}
