@@ -1,42 +1,38 @@
 pipeline {
-    agent any
+    agent none
 
     environment {
         GITHUB_REPO = 'ukim-ambon/gcp-cdsc-multipipelines'
+        DOCKER_IMAGE = 'europe-west2-docker.pkg.dev/ndr-discovery-387213/cdsc-artreg/prod-img:v2'
+        DOCKER_REGISTRY = 'https://europe-west2-docker.pkg.dev'
+        DOCKER_CREDENTIAL_ID = 'gcp-artifact-registry-creds'
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
+        stage('Run in Docker Image') {
+            agent any
 
-        stage('Install Dependencies') {
             steps {
-                sh 'npm install'
-            }
-        }
+                script {
+                    docker.withRegistry(env.DOCKER_REGISTRY, env.DOCKER_CREDENTIAL_ID) {
+                        docker.image(env.DOCKER_IMAGE).inside('-u root') {
 
-        stage('Lint') {
-            steps {
-                sh 'npm run lint'
+                            // Run everything inside the custom image
+                            checkout scm
+
+                            sh 'npm install'
+                            sh 'npm run lint'
+
+                            // Optional: confirm R + testthat is working
+                            sh 'Rscript -e "library(testthat); print(\'testthat loaded OK\')"'
+
+                            // Run your test script
+                            sh 'Rscript campylobacter_analysis/tests/uTest_start.R'
+                        }
+                    }
+                }
             }
         }
-		
-		stage('R Unit Tests') {
-			steps {
-				sh '''
-					Rscript campylobacter_analysis/tests/uTest_start.R
-				'''
-			}
-		}
-		
-		stage('Debug BUILD_URL') {
-			steps {
-				echo "BUILD_URL: '${env.BUILD_URL}'"
-			}
-		}
     }
 
     post {
