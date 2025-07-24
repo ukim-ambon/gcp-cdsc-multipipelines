@@ -1,13 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'europe-west2-docker.pkg.dev/ndr-discovery-387213/cdsc-artreg/prod-img:v2'
-            label 'docker' // optional: restricts to nodes with Docker
-            args '-u root' // runs as root inside the container
-            registryUrl 'https://europe-west2-docker.pkg.dev'
-            registryCredentialsId 'gcp-artifact-registry-creds'
-        }
-    }
+    agent any  
 
     environment {
         GITHUB_REPO = 'ukim-ambon/gcp-cdsc-multipipelines'
@@ -17,6 +9,17 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+            }
+        }
+
+        stage('Debug Environment') {
+            steps {
+                echo "Checking environment versions and permissions"
+                sh 'whoami'
+                sh 'node -v'
+                sh 'npm -v'
+                sh 'R --version'
+                sh 'ls -la'
             }
         }
 
@@ -41,12 +44,12 @@ pipeline {
 
     post {
         success {
-            node {
+            script {
                 updateGitHubStatus('success', 'Build succeeded')
             }
         }
         failure {
-            node {
+            script {
                 updateGitHubStatus('failure', 'Build failed')
             }
         }
