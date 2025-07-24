@@ -1,36 +1,40 @@
 pipeline {
-    agent none
+    agent {
+        docker {
+            image 'europe-west2-docker.pkg.dev/ndr-discovery-387213/cdsc-artreg/prod-img:v2'
+            label 'docker' // optional: restricts to nodes with Docker
+            args '-u root' // runs as root inside the container
+            registryUrl 'https://europe-west2-docker.pkg.dev'
+            registryCredentialsId 'gcp-artifact-registry-creds'
+        }
+    }
 
     environment {
         GITHUB_REPO = 'ukim-ambon/gcp-cdsc-multipipelines'
-        DOCKER_IMAGE = 'europe-west2-docker.pkg.dev/ndr-discovery-387213/cdsc-artreg/prod-img:v2'
-        DOCKER_REGISTRY = 'https://europe-west2-docker.pkg.dev'
-        DOCKER_CREDENTIAL_ID = 'gcp-artifact-registry-creds'
     }
 
     stages {
-        stage('Run in Docker Image') {
-            agent any
-
+        stage('Checkout') {
             steps {
-                script {
-                    docker.withRegistry(env.DOCKER_REGISTRY, env.DOCKER_CREDENTIAL_ID) {
-                        docker.image(env.DOCKER_IMAGE).inside('-u root') {
+                checkout scm
+            }
+        }
 
-                            // Run everything inside the custom image
-                            checkout scm
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
 
-                            sh 'npm install'
-                            sh 'npm run lint'
+        stage('Lint') {
+            steps {
+                sh 'npm run lint'
+            }
+        }
 
-                            // Optional: confirm R + testthat is working
-                            sh 'Rscript -e "library(testthat); print(\'testthat loaded OK\')"'
-
-                            // Run your test script
-                            sh 'Rscript campylobacter_analysis/tests/uTest_start.R'
-                        }
-                    }
-                }
+        stage('Run R Tests') {
+            steps {
+                sh 'Rscript campylobacter_analysis/tests/uTest_start.R'
             }
         }
     }
