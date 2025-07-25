@@ -24,12 +24,19 @@ pipeline {
             }
         }
 		
-		
+		stage('Prepare Environment') {
+			steps {
+				sh '''
+					sudo apt-get update
+					sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev build-essential
+					'''
+			}
+		}
 
         stage('Run R Tests') {
             steps {
                 sh '''					
-					Rscript -e "lib <- file.path(Sys.getenv('WORKSPACE'), 'R_libs'); dir.create(lib, showWarnings=FALSE); .libPaths(lib); if (!requireNamespace('testthat', quietly=TRUE)) install.packages('testthat', lib=lib, repos='https://cloud.r-project.org', type='binary')"
+					Rscript -e "lib <- file.path(Sys.getenv('WORKSPACE'), 'R_libs'); dir.create(lib, showWarnings=FALSE); .libPaths(lib); if (!requireNamespace('testthat', quietly=TRUE)) install.packages('testthat', lib=lib, repos='https://cloud.r-project.org')"
 					Rscript campylobacter_analysis/tests/uTest_start.R
 				'''
             }
