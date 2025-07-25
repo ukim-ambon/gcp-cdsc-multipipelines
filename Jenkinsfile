@@ -29,7 +29,7 @@ pipeline {
         stage('Run R Tests') {
             steps {
                 sh '''
-					docker run --rm -v $PWD:$PWD -w $PWD europe-west2-docker.pkg.dev/ndr-discovery-387213/cdsc-artreg/prod-img:v2 \
+					Rscript -e "if (!requireNamespace('testthat', quietly=TRUE)) install.packages('testthat', repos='https://cloud.r-project.org')"
 					Rscript campylobacter_analysis/tests/uTest_start.R
 				'''
             }
