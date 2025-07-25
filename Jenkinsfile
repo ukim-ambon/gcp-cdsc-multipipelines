@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         GITHUB_REPO = 'ukim-ambon/gcp-cdsc-multipipelines'
+		R_LIBS_USER = "${env.WORKSPACE}/R_libs"
     }
 
     stages {
@@ -24,19 +25,19 @@ pipeline {
             }
         }
 		
-		stage('Prepare Environment') {
-			steps {
-				sh '''
-					sudo apt-get update
-					sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev build-essential
-					'''
-			}
-		}
-
+		stage('Install R Packages') {
+            steps {
+                sh '''
+                    mkdir -p "$R_LIBS_USER"
+                    Rscript -e "install.packages('testthat', lib=Sys.getenv('R_LIBS_USER'), repos='https://cloud.r-project.org')"
+                '''
+            }
+        }
+		
         stage('Run R Tests') {
             steps {
                 sh '''					
-					Rscript -e "lib <- file.path(Sys.getenv('WORKSPACE'), 'R_libs'); dir.create(lib, showWarnings=FALSE); .libPaths(lib); if (!requireNamespace('testthat', quietly=TRUE)) install.packages('testthat', lib=lib, repos='https://cloud.r-project.org')"
+					export R_LIBS_USER="$WORKSPACE/R_libs"
 					Rscript campylobacter_analysis/tests/uTest_start.R
 				'''
             }
