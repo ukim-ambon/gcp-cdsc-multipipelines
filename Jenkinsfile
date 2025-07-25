@@ -28,7 +28,10 @@ pipeline {
 
         stage('Run R Tests') {
             steps {
-                sh 'Rscript campylobacter_analysis/tests/uTest_start.R'
+                sh '''
+					docker run --rm -v $PWD:$PWD -w $PWD europe-west2-docker.pkg.dev/ndr-discovery-387213/cdsc-artreg/prod-img:v2 \
+					Rscript campylobacter_analysis/tests/uTest_start.R
+				'''
             }
         }
     }
