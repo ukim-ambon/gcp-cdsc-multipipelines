@@ -2,7 +2,6 @@ pipeline {
     agent {
         docker {
             image 'europe-west2-docker.pkg.dev/ndr-discovery-387213/cdsc-artreg/prod-img:v2'
-            label 'docker'
             args '-u root'
             registryUrl 'https://europe-west2-docker.pkg.dev'
             registryCredentialsId 'gcp-artifact-registry-creds'
