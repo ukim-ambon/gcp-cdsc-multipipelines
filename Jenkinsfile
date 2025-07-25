@@ -29,7 +29,7 @@ pipeline {
             steps {
                 sh '''
                     mkdir -p "$R_LIBS_USER"
-                    Rscript -e "install.packages('testthat', lib=Sys.getenv('R_LIBS_USER'), repos='https://cloud.r-project.org')"
+                    Rscript -e "install.packages('testthat', lib=Sys.getenv('R_LIBS_USER'), repos='https://cloud.r-project.org', type='binary')"
                 '''
             }
         }
