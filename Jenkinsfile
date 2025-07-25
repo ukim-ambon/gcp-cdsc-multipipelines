@@ -28,8 +28,10 @@ pipeline {
 
         stage('Run R Tests') {
             steps {
-                sh '''
-					Rscript -e "lib <- file.path(Sys.getenv('WORKSPACE'), 'R_libs'); dir.create(lib, showWarnings=FALSE); .libPaths(lib); if (!requireNamespace('testthat', quietly=TRUE)) install.packages('testthat', lib=lib, repos='https://cloud.r-project.org')"
+                sh '''					
+					Rscript -e "lib <- file.path(Sys.getenv('WORKSPACE'), 'R_libs'); dir.create(lib, showWarnings=FALSE); .libPaths(lib); \
+						if (!requireNamespace('testthat', quietly=TRUE)) \
+							install.packages('testthat', lib=lib, repos='https://cloud.r-project.org', type='binary')"
 					Rscript campylobacter_analysis/tests/uTest_start.R
 				'''
             }
