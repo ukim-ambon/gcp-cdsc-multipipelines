@@ -26,7 +26,10 @@ pipeline {
 		
         stage('Run R Tests') {
             steps {
-                sh 'Rscript campylobacter_analysis/tests/uTest_start.R'
+                sh '''
+					Rscript -e ".libPaths(c('/usr/local/lib/R/site-library', .libPaths()))"
+					Rscript campylobacter_analysis/tests/uTest_start.R
+				'''
             }
         }
     }
