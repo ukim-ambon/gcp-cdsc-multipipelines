@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         GITHUB_REPO = 'ukim-ambon/gcp-cdsc-multipipelines'
-		R_LIBS_USER = "${env.WORKSPACE}/R_libs"
     }
 
     stages {
@@ -25,21 +24,9 @@ pipeline {
             }
         }
 		
-		stage('Install R Packages') {
-            steps {
-                sh '''
-                    mkdir -p "$R_LIBS_USER"
-                    Rscript -e "install.packages('testthat', lib=Sys.getenv('R_LIBS_USER'), repos='https://cloud.r-project.org', type='binary')"
-                '''
-            }
-        }
-		
         stage('Run R Tests') {
             steps {
-                sh '''					
-					export R_LIBS_USER="$WORKSPACE/R_libs"
-					Rscript campylobacter_analysis/tests/uTest_start.R
-				'''
+                sh 'Rscript campylobacter_analysis/tests/uTest_start.R'
             }
         }
     }
