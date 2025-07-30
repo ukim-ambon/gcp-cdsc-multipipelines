@@ -22,7 +22,8 @@ pipeline {
             steps {
                 sh '''
 					Rscript -e ".libPaths(c('/usr/local/lib/R/site-library', .libPaths()))"
-					Rscript campylobacter_analysis/tests/uTest_start.R
+					cd campylobacter_analysis
+					Rscript tests/uTest_start.R
 				'''
             }
         }
