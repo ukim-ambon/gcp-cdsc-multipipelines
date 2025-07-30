@@ -10,4 +10,4 @@ if (has_failures) {
   quit(status = 1)
 }
 
-cat("\n✅ All unit tests have passed!\n")
+cat("\n All unit tests have passed!\n")
