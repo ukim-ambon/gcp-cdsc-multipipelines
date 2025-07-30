@@ -6,12 +6,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Install Dependencies') {
             steps {
                 sh 'npm install'
@@ -21,6 +15,29 @@ pipeline {
         stage('Lint') {
             steps {
                 sh 'npm run lint'
+            }
+        }
+		
+		stage('Debug: Check Test Files') {
+			steps {
+				sh '''
+					echo "📂 Current dir: $(pwd)"
+					echo "📁 Listing all test files:"
+					find . -type f | sort
+					
+					echo "📁 Specifically looking for test_that files:"
+					find campylobacter_analysis/tests/testthat -type f || echo "❌ No test files found"
+				'''
+			}
+		}
+		
+        stage('Run R Tests') {
+            steps {
+                sh '''
+					Rscript -e ".libPaths(c('/usr/local/lib/R/site-library', .libPaths()))"
+					cd campylobacter_analysis
+					Rscript tests/uTest_start.R
+				'''
             }
         }
     }
@@ -41,7 +58,7 @@ pipeline {
 
 def updateGitHubStatus(String state, String description) {
     def commitSha = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-    def buildUrl = env.BUILD_URL
+    def buildUrl = env.BUILD_URL ?: 'https://8080-cs-90bc33d3-2207-4028-9b8e-369b8626fcbf.cs-europe-west1-iuzs.cloudshell.dev/job/' + env.JOB_NAME + '/' + env.BUILD_NUMBER + '/'
 
     withCredentials([usernamePassword(credentialsId: 'jenkins-cdsc-token', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN')]) {
         sh """
