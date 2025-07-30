@@ -18,6 +18,19 @@ pipeline {
             }
         }
 		
+		stage('Debug: Check Test Files') {
+			steps {
+				sh '''
+					echo "📂 Current dir: $(pwd)"
+					echo "📁 Listing all test files:"
+					find . -type f | sort
+					
+					echo "📁 Specifically looking for test_that files:"
+					find campylobacter_analysis/tests/testthat -type f || echo "❌ No test files found"
+				'''
+			}
+		}
+		
         stage('Run R Tests') {
             steps {
                 sh '''
